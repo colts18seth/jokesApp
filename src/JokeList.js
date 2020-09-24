@@ -86,7 +86,6 @@ class JokeList extends React.Component {
         this.state = { jokes: [] };
         this.getJokes = this.getJokes.bind(this);
         this.generateNewJokes = this.generateNewJokes.bind(this);
-        this.vote = this.vote.bind(this);
     }
 
     async getJokes() {
@@ -101,12 +100,12 @@ class JokeList extends React.Component {
 
                 if (!seenJokes.has(jokeObj.id)) {
                     seenJokes.add(jokeObj.id);
-                    j.push({ ...jokeObj, votes: 0 });
+                    j.push({ ...jokeObj });
                 } else {
                     console.error("duplicate found!");
                 }
             }
-            this.setState(j);
+            this.setState({ jokes: j });
         } catch (e) {
             console.log(e);
         }
@@ -114,14 +113,6 @@ class JokeList extends React.Component {
 
     generateNewJokes() {
         this.setState({ jokes: [] });
-    }
-
-    vote(id, delta) {
-        console.log(id)
-        this.setState(({ jokes }) => {
-            jokes.map(j => j.id === id ? { ...j, votes: j.votes + delta } : j)
-        });
-        console.log(this.state.jokes)
     }
 
     componentDidMount() {
@@ -143,7 +134,7 @@ class JokeList extends React.Component {
                     </button>
 
                     {sortedJokes.map(j => (
-                        <Joke text={j.joke} key={uuid()} id={j.id} votes={j.votes} vote={this.vote} />
+                        <Joke text={j.joke} key={uuid()} id={j.id} />
                     ))}
                 </div>
             );
